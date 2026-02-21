@@ -1,77 +1,77 @@
 package com.example.time;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.FragmentTransaction;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-    //初始化登录页面
-    private EditText editTextpass,editTextcount;
+public class MainActivity extends AppCompatActivity {
+
+    private BottomNavigationView bottomNavigationView;
+    private TextView textView;
+    private WeatherFragment mHomeFragment;
+    private CalenderFragment mSettingFragment;
+    private MemoFragment mListFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        Button btnlog = findViewById(R.id.btnlog);
-        Button btnregister = findViewById(R.id.btnregister);
-        btnlog.setOnClickListener(this);
-        btnregister.setOnClickListener(this);
+        //
+        bottomNavigationView = findViewById(R.id.page1);
 
-        editTextpass = findViewById(R.id.editTextpass);
-        editTextcount = findViewById(R.id.editTextcount);
+        selectFragment(8);
     }
 
+    public void selectFragment(int position){
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        hideFragment(fragmentTransaction);
+        if(position == 0){
+            if(mHomeFragment==null){
+                mHomeFragment = new WeatherFragment();
+                fragmentTransaction.add(R.id.content,mHomeFragment);
+            }
+            else{
+                fragmentTransaction.show(mHomeFragment);
+            }
+        } else if (position == 1) {
+            if(mListFragment==null){
+                mListFragment = new MemoFragment();
+                fragmentTransaction.add(R.id.content,mListFragment);
+            }
+            else{
+                fragmentTransaction.show(mListFragment);
+            }
+        } else if (position == 2) {
+            if(mSettingFragment==null){
+                mSettingFragment = new CalenderFragment();
+                fragmentTransaction.add(R.id.content,mSettingFragment);
+            }
+            else{
+                fragmentTransaction.show(mSettingFragment);
+            }
+        }
 
-    @Override
-    //实现登录与注册功能
-    public void onClick(View v){
-        int btn=v.getId();
-        //常见的登录反馈
-        if(btn == R.id.btnlog){
-            String inputcount = editTextcount.getText().toString();
-            String inputpass = editTextpass.getText().toString();
-            if(inputcount.equals("admin")){
-                 if(inputpass.equals("123")){
-                     loginSuccess(inputcount,inputpass);
-              }//登录成功
-                else {
-                     Toast.makeText(this, "账号或密码错误", Toast.LENGTH_SHORT).show();
-                 }
-            }
-            else{
-                 Toast.makeText(this, "账号或密码错误", Toast.LENGTH_SHORT).show();
-            }
-        }
-        //常见的注册反馈
-        if(btn == R.id.btnregister){
-            String inputcount = editTextcount.getText().toString();
-            String inputpass = editTextpass.getText().toString();
-            if(inputcount == "83484"){
-                Toast.makeText(this, "该账号已存在", Toast.LENGTH_SHORT).show();
-            }
-            if(inputpass.isEmpty()){
-                Toast.makeText(this, "请输入密码", Toast.LENGTH_SHORT).show();
-            }
-            else{
-                Toast.makeText(this, "注册成功，请重新输入密码登录", Toast.LENGTH_SHORT).show();
-            }
-        }
+
+        //提交
+        fragmentTransaction.commit();
     }
-    private void loginSuccess(String username,String password){
 
-        LoginActivity.startActivity(this,username,password);
-        Toast.makeText(this,"登陆成功",Toast.LENGTH_SHORT).show();
+    private void hideFragment(FragmentTransaction fragmentTransaction){
+        if(mHomeFragment != null){
+            fragmentTransaction.hide(mHomeFragment);
+        }
+
+        if(mListFragment != null){
+            fragmentTransaction.hide(mListFragment);
+        }
+
+        if(mSettingFragment != null){
+            fragmentTransaction.hide(mSettingFragment);
+        }
     }
 }
