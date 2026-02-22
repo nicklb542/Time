@@ -1,18 +1,18 @@
 package com.example.time;
+import com.example.time.api.HttpService;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,11 +21,15 @@ public class MainActivity extends AppCompatActivity {
     private WeatherFragment mWeatherFragment;
     private CalenderFragment mCanlenderFragment;
     private MemoFragment mMemoFragment;
-
+    private Retrofit retrofit;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        retrofit = new Retrofit.Builder().baseUrl("https://api.caiyunapp.com/v2.6/pYLHWBhXj6bkqXUh/101.6656,39.2072/weather").addConverterFactory(GsonConverterFactory.create()).build();
+
+        HttpService httpService = retrofit.create(HttpService.class);
 
         //初始化底部导航栏
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
