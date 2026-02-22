@@ -2,10 +2,12 @@ package com.example.time;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -25,12 +27,27 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //
-        bottomNavigationView = findViewById(R.id.page1);
+        //初始化底部导航栏
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
-        selectFragment(8);
+        selectFragment(0);
+
+        //检测按钮点击
+        bottomNavigationView.setOnNavigationItemReselectedListener(new BottomNavigationView.OnNavigationItemReselectedListener() {
+            @Override
+            public void onNavigationItemReselected(@NonNull MenuItem menuItem) {
+                if(menuItem.getItemId() == R.id.weather){
+                    selectFragment(0);
+                } else if (menuItem.getItemId() == R.id.memo) {
+                    selectFragment(1);
+                } else{
+                    selectFragment(2);
+                }
+            }
+        });
     }
 
+    //页面跳转
     public void selectFragment(int position) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         hideFragment(fragmentTransaction);
@@ -48,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 fragmentTransaction.show(mMemoFragment);
             }
-        } else if (position == 2) {
+        } else {
             if (mCanlenderFragment == null) {
                 mCanlenderFragment = new CalenderFragment();
                 fragmentTransaction.add(R.id.content, mCanlenderFragment);
@@ -57,11 +74,11 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-
         //提交
         fragmentTransaction.commit();
     }
 
+    //隐藏其他页面
     private void hideFragment(FragmentTransaction fragmentTransaction) {
         if (mWeatherFragment != null) {
             fragmentTransaction.hide(mWeatherFragment);

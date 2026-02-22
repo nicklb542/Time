@@ -2,18 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-    <item android:id="@+id/home"
-        android:title="1"
+    <item android:id="@+id/weather"
+        android:title="天气"
         android:icon="@drawable/ic_launcher_background">
     </item>
 
-    <item android:id="@+id/home"
-        android:title="2"
+    <item android:id="@+id/memo"
+        android:title="备忘录"
         android:icon="@drawable/ic_launcher_background">
     </item>
 
-    <item android:id="@+id/home"
-        android:title="3"
+    <item android:id="@+id/calender"
+        android:title="日历"
         android:icon="@drawable/ic_launcher_background">
     </item>
 
