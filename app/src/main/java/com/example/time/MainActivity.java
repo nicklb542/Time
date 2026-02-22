@@ -1,9 +1,13 @@
 package com.example.time;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -12,9 +16,9 @@ public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
     private TextView textView;
-    private WeatherFragment mHomeFragment;
-    private CalenderFragment mSettingFragment;
-    private MemoFragment mListFragment;
+    private WeatherFragment mWeatherFragment;
+    private CalenderFragment mCanlenderFragment;
+    private MemoFragment mMemoFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,32 +31,29 @@ public class MainActivity extends AppCompatActivity {
         selectFragment(8);
     }
 
-    public void selectFragment(int position){
+    public void selectFragment(int position) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         hideFragment(fragmentTransaction);
-        if(position == 0){
-            if(mHomeFragment==null){
-                mHomeFragment = new WeatherFragment();
-                fragmentTransaction.add(R.id.content,mHomeFragment);
-            }
-            else{
-                fragmentTransaction.show(mHomeFragment);
+        if (position == 0) {
+            if (mWeatherFragment == null) {
+                mWeatherFragment = new WeatherFragment();
+                fragmentTransaction.add(R.id.content, mWeatherFragment);
+            } else {
+                fragmentTransaction.show(mWeatherFragment);
             }
         } else if (position == 1) {
-            if(mListFragment==null){
-                mListFragment = new MemoFragment();
-                fragmentTransaction.add(R.id.content,mListFragment);
-            }
-            else{
-                fragmentTransaction.show(mListFragment);
+            if (mMemoFragment == null) {
+                mMemoFragment = new MemoFragment();
+                fragmentTransaction.add(R.id.content, mMemoFragment);
+            } else {
+                fragmentTransaction.show(mMemoFragment);
             }
         } else if (position == 2) {
-            if(mSettingFragment==null){
-                mSettingFragment = new CalenderFragment();
-                fragmentTransaction.add(R.id.content,mSettingFragment);
-            }
-            else{
-                fragmentTransaction.show(mSettingFragment);
+            if (mCanlenderFragment == null) {
+                mCanlenderFragment = new CalenderFragment();
+                fragmentTransaction.add(R.id.content, mCanlenderFragment);
+            } else {
+                fragmentTransaction.show(mCanlenderFragment);
             }
         }
 
@@ -61,17 +62,17 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-    private void hideFragment(FragmentTransaction fragmentTransaction){
-        if(mHomeFragment != null){
-            fragmentTransaction.hide(mHomeFragment);
+    private void hideFragment(FragmentTransaction fragmentTransaction) {
+        if (mWeatherFragment != null) {
+            fragmentTransaction.hide(mWeatherFragment);
         }
 
-        if(mListFragment != null){
-            fragmentTransaction.hide(mListFragment);
+        if (mMemoFragment != null) {
+            fragmentTransaction.hide(mMemoFragment);
         }
 
-        if(mSettingFragment != null){
-            fragmentTransaction.hide(mSettingFragment);
+        if (mCanlenderFragment != null) {
+            fragmentTransaction.hide(mCanlenderFragment);
         }
     }
 }
