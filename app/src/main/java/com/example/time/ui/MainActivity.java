@@ -1,49 +1,39 @@
-package com.example.time;
-import com.example.time.api.HttpService;
+package com.example.time.ui;
+import com.example.time.R;
 
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.strictmode.SqliteObjectLeakedViolation;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.time.bean.WeatherResponse;
+import com.example.time.db.DatebaseHelper;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import java.io.IOException;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
     private TextView textView;
     private WeatherFragment mWeatherFragment;
-    private CalenderFragment mCanlenderFragment;
     private MemoFragment mMemoFragment;
-    private Retrofit retrofit;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        retrofit = new Retrofit.Builder().baseUrl("https://api.caiyunapp.com/").addConverterFactory(GsonConverterFactory.create()).build();
+        //创建数据库
+        DatebaseHelper helper=new DatebaseHelper(this);
+        helper.getWritableDatabase();
 
         //初始化底部导航栏
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         //初始进入页面：天气
         selectFragment(0);
-
         //检测按钮点击
         bottomNavigationView.setOnNavigationItemReselectedListener(new BottomNavigationView.OnNavigationItemReselectedListener() {
             @Override
@@ -70,19 +60,12 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 fragmentTransaction.show(mWeatherFragment);
             }
-        } else if (position == 1) {
+        } else {
             if (mMemoFragment == null) {
                 mMemoFragment = new MemoFragment();
                 fragmentTransaction.add(R.id.content, mMemoFragment);
             } else {
                 fragmentTransaction.show(mMemoFragment);
-            }
-        } else {
-            if (mCanlenderFragment == null) {
-                mCanlenderFragment = new CalenderFragment();
-                fragmentTransaction.add(R.id.content, mCanlenderFragment);
-            } else {
-                fragmentTransaction.show(mCanlenderFragment);
             }
         }
 
@@ -99,9 +82,7 @@ public class MainActivity extends AppCompatActivity {
         if (mMemoFragment != null) {
             fragmentTransaction.hide(mMemoFragment);
         }
-
-        if (mCanlenderFragment != null) {
-            fragmentTransaction.hide(mCanlenderFragment);
-        }
     }
+
+
 }

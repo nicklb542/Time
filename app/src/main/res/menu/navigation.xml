@@ -12,9 +12,4 @@
         android:icon="@drawable/ic_launcher_background">
     </item>
 
-    <item android:id="@+id/calender"
-        android:title="日历"
-        android:icon="@drawable/ic_launcher_background">
-    </item>
-
 </menu>

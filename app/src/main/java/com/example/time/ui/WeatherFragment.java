@@ -1,4 +1,4 @@
-package com.example.time;
+package com.example.time.ui;
 
 import android.os.Bundle;
 
@@ -11,64 +11,67 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.time.api.HttpService;
-import com.example.time.bean.WeatherResponse;
-import com.example.time.MainActivity;
-
-import java.util.List;
+import com.example.time.R;
+import com.example.time.api.RealService;
 
 import retrofit2.Call;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class WeatherFragment extends Fragment {
 
 
     private static final String TAG = "MainActivity";
-    private HttpService httpService;
+    private RealService realService;
 
 
     private TextView max_now;
     private TextView min_now;
     private TextView avg_now;
+    private Retrofit retrofit;
+    private retrofit2.Call<WeatherResponse> call;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.e("DEBUG","dd");
+        retrofit = new Retrofit.Builder().baseUrl("https://api.caiyunapp.com/").addConverterFactory(GsonConverterFactory.create()).build();
+        realService= retrofit.create(RealService.class);
 
         View view=inflater.inflate(R.layout.fragment_weather,container,false);
         max_now = view.findViewById(R.id.max_now);
         min_now = view.findViewById(R.id.min_now);
         avg_now = view.findViewById(R.id.avg_now);
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_weather, container, false);
-    }
 
+        postAsync(view);
+        return view;
+    }
 
     //网络请求
     public void postAsync(View view) {
-        retrofit2.Call<WeatherResponse> call= httpService.get("ture",1);
+
+        MainActivity activity=(MainActivity) getActivity();
+        call = realService.get();
         call.enqueue(new retrofit2.Callback<WeatherResponse>() {
             //请求完成
             @Override
-            public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
+            public void onResponse(@Nullable Call<WeatherResponse> call, @Nullable Response<WeatherResponse> response) {
                 try{
                     if(response.body()!=null){
-                            WeatherResponse.Result result = response.body().getResult();
-                            WeatherResponse.Result.Daily daily =response.body().getResult().getDaily();
-                            List<WeatherResponse.Result.Daily.Temperature> tempeList = response.body().getResult().getDaily().getTemperature();
-                            WeatherResponse.Result.Daily.Temperature temperature= tempeList.get(0);
-                            int max = temperature.getMax();
-                            int min = temperature.getMin();
-                            double avg = temperature.getAvg();
-                            max_now.setText("最高气温"+max+"度");
-                            min_now.setText("最低气温"+min+"度");
-                            avg_now.setText("平均气温"+avg+"度");
 
                     }else {
-                        Log.e(TAG, "qqq"+response.code());
+                        String error =response.errorBody() != null ? response.errorBody().string():"kong";
+                        Log.e("DEBUG",error);
+                        Log.e("DEBUG","bbbb");
+                        max_now.setText("最高气温度？");
+                        min_now.setText("最低气温"+"度");
+                        avg_now.setText("平均气温"+"度");
+                        return;
                     }
                 }catch (Exception e){
+                    Log.e("DEBUG","ddd");
                     e.printStackTrace();
                 }
             }
