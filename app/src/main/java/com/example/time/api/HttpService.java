@@ -6,6 +6,6 @@ import com.example.time.bean.WeatherResponse;
 
 public interface HttpService {
 
-    @GET
-    Call<WeatherResponse> get(@Query("Daylisteps") int Daylisteps );
+    @GET("v2.6/pYLHWBhXj6bkqXUh/101.6656,39.2072/weather?")
+    Call<WeatherResponse> get(@Query("alert") String alert,@Query("daylisteps") int Daylisteps );
 }
