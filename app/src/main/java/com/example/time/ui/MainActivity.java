@@ -10,8 +10,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.time.R;
 import com.example.time.api.RealService;
+import com.example.time.bean.RealResponce;
+
 
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -22,26 +25,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        retrofit = new Retrofit.Builder().baseUrl("https://api.caiyunapp.com/").addConverterFactory(GsonConverterFactory.create()).build();
-        realService= retrofit.create(RealService.class);
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://api.caiyunapp.com/").addConverterFactory(GsonConverterFactory.create()).build();
+        RealService realService = retrofit.create(RealService.class);
 
-        View view=inflater.inflate(R.layout.fragment_weather,container,false);
-
-
-        postAsync(view);
-        return view;
+        postAsync(realService);
 
     }
 
     //网络请求
-    public void postAsync(View view) {
+    public void postAsync(RealService realService) {
 
-        MainActivity activity=(MainActivity) getActivity();
-        call = realService.get();
-        call.enqueue(new retrofit2.Callback<WeatherResponse>() {
+        Call<RealResponce> call= realService.get();
+        call.enqueue(new Callback<RealResponce>() {
             //请求完成
             @Override
-            public void onResponse(@Nullable Call<WeatherResponse> call, @Nullable Response<WeatherResponse> response) {
+            public void onResponse(@Nullable Call<RealResponce> call, @Nullable Response<RealResponce> response) {
                 try{
                     if(response.body()!=null){
 
@@ -49,9 +47,6 @@ public class MainActivity extends AppCompatActivity {
                         String error =response.errorBody() != null ? response.errorBody().string():"kong";
                         Log.e("DEBUG",error);
                         Log.e("DEBUG","bbbb");
-                        max_now.setText("最高气温度？");
-                        min_now.setText("最低气温"+"度");
-                        avg_now.setText("平均气温"+"度");
                         return;
                     }
                 }catch (Exception e){
@@ -62,10 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
             //请求失败
             @Override
-            public void onFailure(Call<WeatherResponse> call, Throwable t) {
-                Log.e(TAG,"uu"+t.getMessage(),t);
-                MainActivity activity=(MainActivity) getActivity();
-                activity.selectFragment(0);
+            public void onFailure(Call<RealResponce> call, Throwable t) {
             }
         });
     }
