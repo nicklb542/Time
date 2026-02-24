@@ -1,88 +1,75 @@
 package com.example.time.ui;
-import com.example.time.R;
 
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
-import android.os.strictmode.SqliteObjectLeakedViolation;
-import android.view.MenuItem;
-import android.widget.TextView;
+import android.util.Log;
+import android.view.View;
 
-import androidx.annotation.NonNull;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentTransaction;
 
-import com.example.time.db.DatebaseHelper;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.example.time.R;
+import com.example.time.api.RealService;
+
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
-
-    private BottomNavigationView bottomNavigationView;
-    private TextView textView;
-    private WeatherFragment mWeatherFragment;
-    private MemoFragment mMemoFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        retrofit = new Retrofit.Builder().baseUrl("https://api.caiyunapp.com/").addConverterFactory(GsonConverterFactory.create()).build();
+        realService= retrofit.create(RealService.class);
 
-        //创建数据库
-        DatebaseHelper helper=new DatebaseHelper(this);
-        helper.getWritableDatabase();
+        View view=inflater.inflate(R.layout.fragment_weather,container,false);
 
-        //初始化底部导航栏
-        bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        //初始进入页面：天气
-        selectFragment(0);
-        //检测按钮点击
-        bottomNavigationView.setOnNavigationItemReselectedListener(new BottomNavigationView.OnNavigationItemReselectedListener() {
+
+        postAsync(view);
+        return view;
+
+    }
+
+    //网络请求
+    public void postAsync(View view) {
+
+        MainActivity activity=(MainActivity) getActivity();
+        call = realService.get();
+        call.enqueue(new retrofit2.Callback<WeatherResponse>() {
+            //请求完成
             @Override
-            public void onNavigationItemReselected(@NonNull MenuItem menuItem) {
-                if(menuItem.getItemId() == R.id.weather){
-                    selectFragment(0);
-                } else if (menuItem.getItemId() == R.id.memo) {
-                    selectFragment(1);
-                } else{
-                    selectFragment(2);
+            public void onResponse(@Nullable Call<WeatherResponse> call, @Nullable Response<WeatherResponse> response) {
+                try{
+                    if(response.body()!=null){
+
+                    }else {
+                        String error =response.errorBody() != null ? response.errorBody().string():"kong";
+                        Log.e("DEBUG",error);
+                        Log.e("DEBUG","bbbb");
+                        max_now.setText("最高气温度？");
+                        min_now.setText("最低气温"+"度");
+                        avg_now.setText("平均气温"+"度");
+                        return;
+                    }
+                }catch (Exception e){
+                    Log.e("DEBUG","ddd");
+                    e.printStackTrace();
                 }
+            }
+
+            //请求失败
+            @Override
+            public void onFailure(Call<WeatherResponse> call, Throwable t) {
+                Log.e(TAG,"uu"+t.getMessage(),t);
+                MainActivity activity=(MainActivity) getActivity();
+                activity.selectFragment(0);
             }
         });
     }
 
-    //页面跳转
-    public void selectFragment(int position) {
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        hideFragment(fragmentTransaction);
-        if (position == 0) {
-            if (mWeatherFragment == null) {
-                mWeatherFragment = new WeatherFragment();
-                fragmentTransaction.add(R.id.content, mWeatherFragment);
-            } else {
-                fragmentTransaction.show(mWeatherFragment);
-            }
-        } else {
-            if (mMemoFragment == null) {
-                mMemoFragment = new MemoFragment();
-                fragmentTransaction.add(R.id.content, mMemoFragment);
-            } else {
-                fragmentTransaction.show(mMemoFragment);
-            }
-        }
-
-        //提交
-        fragmentTransaction.commit();
-    }
-
-    //隐藏其他页面
-    private void hideFragment(FragmentTransaction fragmentTransaction) {
-        if (mWeatherFragment != null) {
-            fragmentTransaction.hide(mWeatherFragment);
-        }
-
-        if (mMemoFragment != null) {
-            fragmentTransaction.hide(mMemoFragment);
-        }
-    }
 
 
 }
