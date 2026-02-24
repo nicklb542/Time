@@ -6,109 +6,38 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/tv_day1_max"
-        android:layout_width="74dp"
-        android:layout_height="41dp"
-        android:text="9"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/tv_day1_min"
-        app:layout_constraintHorizontal_bias="0.58"
+        android:id="@+id/tv_time1"
+        android:layout_width="333dp"
+        android:layout_height="59dp"
+        android:layout_marginTop="108dp"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.464"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.023" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tv_day1_min"
-        android:layout_width="63dp"
-        android:layout_height="54dp"
-        android:text="1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.551"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.045" />
-
-    <TextView
-        android:id="@+id/tv_day1_avg"
-        android:layout_width="66dp"
-        android:layout_height="47dp"
-        android:text="2"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.411"
-        app:layout_constraintStart_toEndOf="@+id/tv_day1_min"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.043" />
-
-    <TextView
-        android:id="@+id/tv_day2_max"
-        android:layout_width="44dp"
-        android:layout_height="65dp"
-        android:text="3"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.228"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.337" />
-
-    <TextView
-        android:id="@+id/tv_day2_min"
-        android:layout_width="79dp"
-        android:layout_height="49dp"
-        android:layout_marginStart="60dp"
-        android:text="4"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tv_day2_max"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.351" />
-
-    <TextView
-        android:id="@+id/tv_day2_avg"
-        android:layout_width="51dp"
-        android:layout_height="68dp"
-        android:layout_marginStart="52dp"
-        android:text="5"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/tv_day2_min"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.337" />
-
-    <TextView
-        android:id="@+id/tv_day3_max"
-        android:layout_width="86dp"
-        android:layout_height="82dp"
-        android:layout_marginBottom="332dp"
-        android:text="6"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/tv_day3_min"
-        app:layout_constraintHorizontal_bias="0.758"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_day3_min"
-        android:layout_width="59dp"
+        android:id="@+id/tv_time2"
+        android:layout_width="327dp"
         android:layout_height="52dp"
-        android:layout_marginStart="164dp"
-        android:layout_marginBottom="340dp"
-        android:text="7"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/tv_day3_avg"
-        app:layout_constraintHorizontal_bias="0.396"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="@+id/tv_time1"
+        app:layout_constraintStart_toStartOf="@+id/tv_time1"
+        app:layout_constraintTop_toBottomOf="@+id/tv_time1" />
 
     <TextView
-        android:id="@+id/tv_day3_avg"
-        android:layout_width="101dp"
-        android:layout_height="67dp"
-        android:layout_marginBottom="300dp"
-        android:text="8"
+        android:id="@+id/tv_time3"
+        android:layout_width="324dp"
+        android:layout_height="65dp"
+        android:textSize="20sp"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.912"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="@+id/tv_time2"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/tv_time2"
+        app:layout_constraintTop_toBottomOf="@+id/tv_time2"
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

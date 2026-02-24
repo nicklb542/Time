@@ -22,6 +22,8 @@ import com.example.time.bean.RealResponse;
 import com.google.gson.Gson;
 
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvTemperature;
     private TextView tvPm25,tvPm10;
     private TextView tvAqi,tvDescription;
+    private TextView tvTime1,tvTime2,tvTime3;
     private double lat;//纬度
     private double lon;//经度
     private RealResponse realResponse;
@@ -55,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
         tvPm10=(TextView) findViewById(R.id.tv_pm10);
         tvAqi=(TextView) findViewById(R.id.tv_aqi);
         tvDescription=(TextView) findViewById(R.id.tv_description);
+        tvTime1=(TextView) findViewById(R.id.tv_time1);
+        tvTime2=(TextView) findViewById(R.id.tv_time2);
+        tvTime3=(TextView) findViewById(R.id.tv_time3);
 
 
         //创建并获取location对象
@@ -82,8 +88,10 @@ public class MainActivity extends AppCompatActivity {
         Log.e("DEBUG","获取");
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://api.caiyunapp.com/").addConverterFactory(GsonConverterFactory.create()).build();
         WeatherService realService = retrofit.create(WeatherService.class);
-
         postAsyncReal(realService);
+
+        WeatherService dailyService = retrofit.create(WeatherService.class);
+        postAsyncDaily(dailyService);
         Log.e("DEBUG","联网结束");
 
         locationUpdates(location);
@@ -179,7 +187,28 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<DailyResponse>() {
             @Override
             public void onResponse(@Nullable Call<DailyResponse> call, @Nullable Response<DailyResponse> response) {
+                if(response.body()!=null){
+                    DailyResponse.Result result =response.body().getResult();
+                    DailyResponse.Result.Daily daily = result.getDaily();
+                    List<DailyResponse.Result.Daily.TemperatureItem> temperature = daily.getTemperatureList();
+                    for (int i=0;i<3;i++){
+                        DailyResponse.Result.Daily.TemperatureItem temp = temperature.get(i);
+                        String date = temp.getDate();
+                        String max =String.format("%.1f",temp.getMax());
+                        String min =String.format("%.1f",temp.getMin());
+                        String avg =String.format("%.1f",temp.getAvg());
+                        switch (i){
+                            case 0:tvTime1.setText("日期："+date+"最高气温："+max+"最低气温："+min+"平均气温："+avg);
+                                break;
+                            case 1:tvTime2.setText("日期："+date+"最高气温："+max+"最低气温："+min+"平均气温："+avg);
+                                break;
+                            case 2:tvTime3.setText("日期："+date+"最高气温："+max+"最低气温："+min+"平均气温："+avg);
+                                break;
+                        }
+                    }
+                }else{
 
+                }
             }
 
             @Override
