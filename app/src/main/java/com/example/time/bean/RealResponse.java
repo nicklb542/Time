@@ -1,6 +1,6 @@
 package com.example.time.bean;
 
-public class RealResponce {
+public class RealResponse {
     private Result result;
     public Result getResult(){
         return result;
@@ -8,11 +8,11 @@ public class RealResponce {
     public static class Result{
         private Realtime realtime;
 
-        public Realtime getRealtime() {
+        public Realtime getRealTime() {
             return realtime;
         }
         public static class Realtime{
-            private double temperature,visibility,apparent_tempreature;
+            private double temperature,visibility,apparent_temperature;
             private String skycon;
             private AirQuality air_quality;
 
@@ -24,8 +24,8 @@ public class RealResponce {
                 return visibility;
             }
 
-            public double getApparent_tempreature(){
-                return apparent_tempreature;
+            public double getApparent_temperature(){
+                return apparent_temperature;
             }
 
             public String getSkycon(){
