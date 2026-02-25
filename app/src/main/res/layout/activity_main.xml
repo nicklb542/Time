@@ -7,6 +7,11 @@
     android:layout_height="match_parent"
     tools:context=".ui.MainActivity">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/snow"/>
+
     <ScrollView
         android:id="@+id/main_layout"
         android:layout_width="match_parent"
@@ -30,7 +35,10 @@
             <include layout="@layout/air_quality"/>
 
             <include layout="@layout/three_day"/>
+            
         </LinearLayout>
     </ScrollView>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

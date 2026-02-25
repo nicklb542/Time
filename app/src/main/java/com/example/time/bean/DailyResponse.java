@@ -1,5 +1,11 @@
 package com.example.time.bean;
 
+/*
+ * description:Gson解析对应JSON数据结构（3天的气温数据）
+ * auther:龙斌
+ * email:2275201369@qq.com
+ * date:2025-02-24
+ * */
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
