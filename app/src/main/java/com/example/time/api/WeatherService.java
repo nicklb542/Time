@@ -1,5 +1,11 @@
 package com.example.time.api;
 
+/*
+ * description:服务器api接口定义
+ * auther:龙斌
+ * email:2275201369@qq.com
+ * date:2025-02-23
+ * */
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;

@@ -1,5 +1,10 @@
 package com.example.time.bean;
-
+/*
+ * description:Gson解析对应JSON数据结构
+ * auther:龙斌
+ * email:2275201369@qq.com
+ * date:2025-02-24
+ * */
 public class RealResponse {
     private Result result;
     public Result getResult(){
@@ -8,7 +13,7 @@ public class RealResponse {
     public static class Result{
         private Realtime realtime;
 
-        public Realtime getRealTime() {
+        public Realtime getRealtime() {
             return realtime;
         }
         public static class Realtime{
@@ -36,7 +41,7 @@ public class RealResponse {
                 return air_quality;
             }
 
-            public class AirQuality{
+            public static class AirQuality{
                 private int pm25,pm10;
                 private Aqi aqi;
                 private Description description;
@@ -56,7 +61,7 @@ public class RealResponse {
                 public Description getDescription(){
                     return description;
                 }
-                public class Aqi{
+                public static class Aqi{
                     private int chn;
 
                     public int getChn() {
@@ -64,7 +69,7 @@ public class RealResponse {
                     }
                 }
 
-                public class Description{
+                public static class Description{
                     private String chn;
                     public String getChn(){
                         return chn;

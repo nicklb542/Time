@@ -3,43 +3,63 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="350sp">
+
+    <Button
+        android:id="@+id/bt_freshen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="刷新"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.746"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.08" />
 
     <TextView
         android:id="@+id/tv_apparenttemperature"
-        android:layout_width="135dp"
-        android:layout_height="72dp"
-        android:layout_marginTop="272dp"
-        android:textColor="@color/black"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="84dp"
+        android:textColor="#FFFFFFFF"
         android:textSize="20sp"
+        android:lineSpacingExtra="2dp"
+        android:letterSpacing="0.02"
         app:layout_constraintBottom_toTopOf="@+id/max_now"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/tv_skycon"
-        android:layout_width="138dp"
-        android:layout_height="98dp"
-        android:layout_marginBottom="200dp"
-        android:textColor="@color/black"
+        android:layout_width="140dp"
+        android:layout_height="70dp"
+        android:layout_marginBottom="24dp"
+        android:textColor="#FFFFFFFF"
         android:textSize="20sp"
+        android:lineSpacingExtra="2dp"
+        android:letterSpacing="0.02"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/degree_now"
-        app:layout_constraintVertical_bias="0.236" />
+        app:layout_constraintEnd_toEndOf="@+id/tv_temperature"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/tv_temperature"
+        app:layout_constraintTop_toBottomOf="@+id/tv_temperature"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/tv_temperature"
-        android:layout_width="139dp"
-        android:layout_height="96dp"
+        android:layout_width="140dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="144dp"
+        android:textColor="#FFFFFFFF"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/tv_skycon"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_apparenttemperature" />
+        android:lineSpacingExtra="2dp"
+        android:letterSpacing="0.02"
+        app:layout_constraintEnd_toEndOf="@+id/tv_apparenttemperature"
+        app:layout_constraintStart_toStartOf="@+id/tv_apparenttemperature"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

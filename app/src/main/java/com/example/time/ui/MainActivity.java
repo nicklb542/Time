@@ -7,7 +7,10 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
@@ -30,6 +33,12 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * description: 页面初始化，以及联网请求，获取位置
+ * auther:姓名
+ * email:2275201369@qq.com
+ * date:2025-02-23
+ * */
 public class MainActivity extends AppCompatActivity {
 
     private TextView tvCity;
@@ -39,10 +48,13 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvPm25,tvPm10;
     private TextView tvAqi,tvDescription;
     private TextView tvTime1,tvTime2,tvTime3;
+    private Button btFresh;
     private double lat;//纬度
     private double lon;//经度
     private RealResponse realResponse;
     private DailyResponse dailyResponse;
+
+    public Retrofit retrofit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,19 +74,24 @@ public class MainActivity extends AppCompatActivity {
         tvTime2=(TextView) findViewById(R.id.tv_time2);
         tvTime3=(TextView) findViewById(R.id.tv_time3);
 
+        btFresh=(Button) findViewById(R.id.bt_freshen);
+
 
         //创建并获取location对象
         LocationManager locationManager=(LocationManager) getSystemService(LOCATION_SERVICE);
 
+        //检查有无定位权限
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)!=PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},1001);
             return;
         }
 
+        //注册位置监听器
         locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
                 1000,
                 1,
+                //回调监听器
                 new LocationListener() {
                     @Override
                     public void onLocationChanged(@NonNull Location location) {
@@ -82,27 +99,33 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
         );
+
+        //缓存位置
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        //更新位置
         locationUpdates(location);
 
-        Log.e("DEBUG","获取");
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://api.caiyunapp.com/").addConverterFactory(GsonConverterFactory.create()).build();
+        //创建Retrofit实例
+        retrofit = new Retrofit.Builder().baseUrl("https://api.caiyunapp.com/").addConverterFactory(GsonConverterFactory.create()).build();
+
         WeatherService realService = retrofit.create(WeatherService.class);
         postAsyncReal(realService);
 
         WeatherService dailyService = retrofit.create(WeatherService.class);
         postAsyncDaily(dailyService);
-        Log.e("DEBUG","联网结束");
 
         locationUpdates(location);
-        Log.e("DEBUG","显示?");
 
     }
 
+    /*
+     * description:获取并显示位置
+     * auther:龙斌
+     * email:2275201369@qq.com
+     * date:2025-02-23
+     * */
     public void locationUpdates(Location location){
-        Log.e("DEBUG","way");
         if(location!=null){
-            Log.e("DEBUG","djdjjfglk");
             StringBuilder stringBuilder=new StringBuilder();
             stringBuilder.append("您的位置是：\n");
             stringBuilder.append("经度");
@@ -114,9 +137,15 @@ public class MainActivity extends AppCompatActivity {
             tvCity.setText(stringBuilder.toString());
         }else{
 
+            StringBuilder stringBuilder=new StringBuilder();
+            stringBuilder.append("您的位置是：\n");
+            stringBuilder.append("经度");
+            stringBuilder.append("\n纬度");
+            tvCity.setText(stringBuilder.toString());
         }
     }
 
+    //获取位置权限
     @Override
     public void onRequestPermissionsResult(int requestCode,@Nullable String[] permissions,@Nullable int[] grantResults){
         if(requestCode==1001){
@@ -125,11 +154,18 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-    //网络请求
+
+    /*
+    * Description:发送网络请求获取数据，url:https://api.caiyunapp.com/v2.6/pYLHWBhXj6bkqXUh/{lon},{lat}/realtime
+    * auther:龙斌
+    * email:2275201369@qq.com
+    * date:2025-02-23
+    * */
     public void postAsyncReal(WeatherService realService) {
 
-        Call<RealResponse> call = realService.getRealResponse(lon,lat);
-        call.enqueue(new Callback<RealResponse>() {
+        Call<RealResponse> call1 = realService.getRealResponse(lon,lat);
+        call1.enqueue(new Callback<RealResponse>() {
+
             //请求完成
             @Override
             public void onResponse(@Nullable Call<RealResponse> call, @Nullable Response<RealResponse> response) {
@@ -139,37 +175,41 @@ public class MainActivity extends AppCompatActivity {
                         String jison = gson.toJson(response.body());
                         Log.e("DEBUGT","g"+jison);
                         RealResponse.Result result =response.body().getResult();
-                        RealResponse.Result.Realtime realtime = result.getRealTime();
-                        RealResponse.Result.Realtime.AirQuality airQuality = realtime.getAir_quality();
+                        RealResponse.Result.Realtime realtime = result.getRealtime();
+                        RealResponse.Result.Realtime.AirQuality air_quality = realtime.getAir_quality();
 
                         String skycon = switchSkycon(realtime.getSkycon());
                         tvSkycon.setText("天气："+skycon);
 
                         String ApparentTemperature = String.format("%.1f度",realtime.getApparent_temperature());
-                        tvApparentTemperature.setText("体感温度："+ApparentTemperature);
+                        tvApparentTemperature.setText("体感温度："+ApparentTemperature+"°C");
 
                         String temperature = String.format("%.1f",realtime.getTemperature());
-                        tvTemperature.setText("温度："+temperature);
+                        tvTemperature.setText("温度："+temperature+"°C");
 
-                        String pm25 = String.format("%.1f",airQuality.getPm25());
-                        tvPm25.setText("pm2.5：" + pm25);
+                        String pm25 = String.valueOf(air_quality.getPm25());
+                        tvPm25.setText("pm2.5："+pm25);
 
-                        String pm10 = String.format("%.1f",airQuality.getPm10());
+                        String pm10 = String.valueOf(air_quality.getPm10());
                         tvPm10.setText("pm1.0："+pm10);
 
-                        String aqi = String.format("%.f",airQuality.getAqi());
-                        tvAqi.setText("空气指数："+aqi);
+                        RealResponse.Result.Realtime.AirQuality.Aqi aqi = air_quality.getAqi();
+                        String aqi0 = String.valueOf(aqi.getChn());
+                        tvAqi.setText("空气指数："+aqi0);
 
-                        String description = airQuality.toString();
-                        tvDescription.setText("空气质量："+description);
+                        RealResponse.Result.Realtime.AirQuality.Description description = air_quality.getDescription();
+                        String description0 = description.getChn();
+                        tvDescription.setText("空气质量："+description0);
                     }else {
-
-                        if(response.errorBody()!=null){
-                        Log.e("DEBUG","kong"+response.errorBody().string());}
-
+                        tvSkycon.setText("天气：");
+                        tvApparentTemperature.setText("体感温度：");
+                        tvTemperature.setText("温度：");
+                        tvPm25.setText("pm2.5：");
+                        tvPm10.setText("pm1.0：");
+                        tvAqi.setText("空气指数：");
+                        tvDescription.setText("空气质量：");
                     }
                 }catch (Exception e){
-                    Log.e("DEBUG","jjjjj");
                     e.printStackTrace();
                 }
             }
@@ -177,17 +217,25 @@ public class MainActivity extends AppCompatActivity {
             //请求失败
             @Override
             public void onFailure(Call<RealResponse> call, Throwable t) {
-                    Log.e("DEBUG","连接失败");
+
+                Toast.makeText(MainActivity.this,"连接失败，请点击刷新按钮重试",Toast.LENGTH_SHORT).show();
+
             }
         });
     }
 
+    /*
+     * Description:发送网络请求获取数据（未来3天气温），url:https://api.caiyunapp.com/v2.6/pYLHWBhXj6bkqXUh/{lon},{lat}/dailysteps=3
+     * auther:龙斌
+     * email:3375201369@qq.com
+     * date:2025-02-24
+     * */
     public void postAsyncDaily(WeatherService dailyService){
         Call<DailyResponse> call = dailyService.getDailyResponse(lon,lat);
         call.enqueue(new Callback<DailyResponse>() {
             @Override
             public void onResponse(@Nullable Call<DailyResponse> call, @Nullable Response<DailyResponse> response) {
-                if(response.body()!=null){
+                try{if(response.body()!=null){
                     DailyResponse.Result result =response.body().getResult();
                     DailyResponse.Result.Daily daily = result.getDaily();
                     List<DailyResponse.Result.Daily.TemperatureItem> temperature = daily.getTemperatureList();
@@ -197,28 +245,42 @@ public class MainActivity extends AppCompatActivity {
                         String max =String.format("%.1f",temp.getMax());
                         String min =String.format("%.1f",temp.getMin());
                         String avg =String.format("%.1f",temp.getAvg());
+                        date = date.substring(0,10);
                         switch (i){
-                            case 0:tvTime1.setText("日期："+date+"最高气温："+max+"最低气温："+min+"平均气温："+avg);
+                            case 0:tvTime1.setText("日期："+date+"\n最高气温："+max+"°C 最低气温："+min+"°C 平均气温："+avg+"°C\n");
                                 break;
-                            case 1:tvTime2.setText("日期："+date+"最高气温："+max+"最低气温："+min+"平均气温："+avg);
+                            case 1:tvTime2.setText("日期："+date+"\n最高气温："+max+"°C 最低气温："+min+"°C 平均气温："+avg+"°C\n");
                                 break;
-                            case 2:tvTime3.setText("日期："+date+"最高气温："+max+"最低气温："+min+"平均气温："+avg);
+                            case 2:tvTime3.setText("日期："+date+"\n最高气温："+max+"°C 最低气温："+min+"°C 平均气温："+avg+"°C\n");
                                 break;
                         }
                     }
                 }else{
+                    for (int i=0;i<3;i++){
+                        switch (i){
+                            case 0:tvTime1.setText("日期：null\n"+" 最高气温：null"+" 最低气温：null"+" 平均气温：null");
+                                break;
+                            case 1:tvTime2.setText("日期：null\n"+" 最高气温：null"+" 最低气温：null"+" 平均气温：null");
+                                break;
+                            case 2:tvTime3.setText("日期：null\n"+" 最高气温：null"+" 最低气温：null"+" 平均气温：null");
+                                break;
+                        }
+                    }
 
+                }}catch(Exception e) {
+                    e.printStackTrace();
                 }
             }
 
             @Override
             public void onFailure(Call<DailyResponse> call, Throwable t) {
-
+                Toast.makeText(MainActivity.this,"连接失败，请点击刷新按钮重试",Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    //
+
+    //转化skycon
     public String switchSkycon(String skycon){
         switch (skycon){
             case "CLEAR_DAY":
@@ -264,5 +326,15 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return "未知天气";
         }
+    }
+
+    public void fresh(){
+        btFresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                WeatherService realService = retrofit.create(WeatherService.class);
+                postAsyncReal(realService);
+            }
+        });
     }
 }
