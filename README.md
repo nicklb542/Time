@@ -8,7 +8,7 @@
   2.实时天气信息与未来三天的气温信息： 使用Retrofit框架发送网络请求，调用彩云天气api获取Json数据，使用GSON解析数据并更新到UI界面
 
 #运行效果
-![演示](https://gif.ioby.cn/images/gif/gif_60215893721ji9rhd85_320_8_1.gif)
+https://gif.ioby.cn/images/gif/gif_60215893721ji9rhd85_320_8_1.gif
 
 #心得体会
   对安卓开发流程更加清晰，学习了retrofit的使用，提高了解决代码问题的能力，由于自己的懒惰导致应用并没有做多少时间，所以自己的很多想法都没有实现
