@@ -6,12 +6,13 @@ package com.example.time.api;
  * email:2275201369@qq.com
  * date:2025-02-23
  * */
+
+import com.example.time.bean.DailyResponse;
+import com.example.time.bean.RealResponse;
+
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
-
-import com.example.time.bean.RealResponse;
-import com.example.time.bean.DailyResponse;
 
 public interface WeatherService {
 
